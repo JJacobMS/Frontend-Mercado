@@ -1,10 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
 
 namespace frontendnet.Models;
 
 public class Producto
 {
+    [JsonPropertyName("id")]
     [Display(Name = "Id")]
     public int? ProductoId { get; set; }
 

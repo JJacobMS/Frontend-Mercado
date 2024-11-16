@@ -1,0 +1,125 @@
+@model List<CarritoProducto>
+
+<div class="row small mb-3">
+    <div class="col text-end">
+        Mostrando @Model.Count() elemento(s)
+    </div>
+</div>
+
+<div class="d-flex p-3 mb-3">
+
+    @if (Model.Count() > 0)
+    {
+        <div class="w-75 mr-4">
+            @foreach (var item in Model)
+            {
+                if (item.Producto != null)
+                {
+                    <div class="card border rounded p-3 mb-3 bg-white d-flex flex-row align-items-center">
+                        <div class="me-3">
+                            <img alt="Imagen del producto" class="img-fluid rounded" style="max-width: 150px;">
+                        </div>
+                        <div class="product-info flex-grow-1">
+                            <p class="product-title fw-bold mb-1">@Html.DisplayFor(modelItem => item.Producto.Titulo)</p>
+                            <p class="product-price text-muted mb-3">@Html.DisplayFor(modelItem => item.Producto.Precio)</p>
+                            <div class="product-quantity d-flex align-items-center ">
+                                <button type="button" onclick="disminuir(@item.Producto.ProductoId)"
+                                    class="btn btn-primary btn-sm me-2">-</button>
+                                <input id="cantidad-@item.Producto.ProductoId" type="text"
+                                    class="form-control form-control-sm text-center" value="@item.Cantidad" readonly
+                                    style="width: 50px;">
+                                <button type="button" onclick="aumentar(@item.Producto.ProductoId)"
+                                    class="btn btn-primary btn-sm ms-2">+</button>
+                            </div>
+                            <div class="product-actions mt-3 d-flex ">
+                                    <button class="btn btn-outline-secondary btn-sm btn-eliminar" data-id="@item.Producto.ProductoId">Eliminar</button>
+                                    <button class="btn btn-primary btn-sm ms-2 btn-modificar" data-id="@item.Producto.ProductoId">Modificar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            }
+        </div>
+
+        <div class="w-25 d-flex align-items-center flex-column border rounded p-3">
+            <h6 class="fw-bold mb-4">Resumen de compra</h6>
+            <div class="d-flex w-100">
+                <h6 class="mb-1">Producto</h6>
+                <h6 class="mb-1 ms-auto">Precio</h6>
+            </div>
+            @foreach (var item in Model)
+            {
+                if (item.Producto != null)
+                {
+                    <div class="d-flex w-100">
+                        <p class="mb-1">@Html.DisplayFor(modelItem => item.Producto.Titulo)</p>
+                        <p class="mb-1 ms-auto">$@Html.DisplayFor(modelItem => item.TotalPrecio)</p>
+                    </div>
+                }
+            }
+            <hr class="w-100 my-3" />
+            @if (Model[0] != null)
+            {
+                <div class="d-flex justify-content-between w-100 mb-4">
+                    <p class="fw-bold">Total</p>
+                    <p class="fw-bold">$@Html.DisplayFor(modelItem => Model[0].TotalPrecio)</p>
+                </div>
+                <form class="w-100 text-center">
+                    <button type="submit" class="btn btn-primary w-75 rounded-pill">Comprar</button>
+                </form>
+            }
+
+
+        </div>
+
+    }
+    else
+    {
+        <div class="mt-5">
+            <div class="alert alert-warning" role="alert">
+                No se han encontrado elementos. Inténtelo de nuevo más tarde.
+            </div>
+        </div>
+    }
+
+</div>
+
+<script>
+    function aumentar(idproducto) {
+        const id = "cantidad-" + idproducto;
+        let item = document.getElementById(id);
+        if (item) {
+            let num = parseInt(item.value);
+            if (num != null) {
+                if (num < 10) {
+                    item.style.color = '#8a8a8a'
+                    item.value = (num + 1);
+                }
+
+            } else {
+                item.value = 0;
+            }
+        }
+    }
+
+    function disminuir(idproducto) {
+        const id = "cantidad-" + idproducto;
+        let item = document.getElementById(id);
+        if (item) {
+            let num = parseInt(item.value);
+            if (num != null) {
+                if (num > 1) {
+                    item.style.color = '#8a8a8a'
+                    item.value = (num - 1);
+                }
+
+            } else {
+                item.value = 0;
+            }
+        }
+
+    }
+
+    
+</script>

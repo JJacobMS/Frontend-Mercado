@@ -11,7 +11,7 @@ namespace frontendnet;
 public class AuthController(AuthClientService auth) : Controller
 {
     [AllowAnonymous]
-    public IActionResult index()
+    public IActionResult Index()
     {
         return View();
     }   
