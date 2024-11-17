@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace frontendnet;
 
-//[Authorize(Roles = "Usuario")]
+[Authorize(Roles = "Usuario")]
 public class CarritoController(CarritosClientService carritos) : Controller
 {
     

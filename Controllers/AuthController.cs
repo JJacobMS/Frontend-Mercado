@@ -37,7 +37,7 @@ public class AuthController(AuthClientService auth) : Controller
 
                 if (token.Rol == "Administrador") 
                 {
-                    return RedirectToAction("Index", "Productos");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
