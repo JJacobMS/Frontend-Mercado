@@ -1,0 +1,88 @@
+@model Producto
+
+<div class="row g-0">
+    <div class="col-md-5 d-flex justify-content-center align-items-center bg-light">
+        <img src='@((Model.ArchivoId == null) ? "https://placehold.co/300x200/FFF/999?text=Artículo" : $"{ViewBag.Url}/api/archivos/{Model.ArchivoId}")'
+            alt="@Model.Titulo" class="portada img-fluid rounded" data-url="@ViewBag.Url" style="max-height: 300px;">
+    </div>
+    <div class="col-md-7">
+        <div class="card-body">
+            @if (Model.Categorias != null && Model.Categorias.Count > 0)
+            {
+                foreach (var item in Model.Categorias)
+                {
+                    <span class="badge bg-warning text-dark mb-2">@item.Nombre</span>
+                }
+            }
+
+            <h5 class="card-title fw-bold">@Html.DisplayFor(model => model.Titulo)</h5>
+
+            <p class="text-muted">@Html.DisplayFor(model => model.Descripcion)</p>
+
+            <h4 class="text-primary fw-bold">@Html.DisplayFor(model => model.Precio)</h4>
+
+            <p class="text-success fw-semibold">Producto disponible</p>
+
+            @if (!ViewBag.EnCarrito)
+            {
+                <form asp-action="AgregarCarrito" asp-route-id=@Model.ProductoId>
+                    <div class="d-flex align-items-center mb-3">
+                        <label class="me-3">Selecciona la cantidad:</label>
+                        <button id="disminuir-cantidad" type="button" class="btn btn-primary btn-sm me-2"
+                            onclick="disminuir()">-</button>
+                        <input id="cantidad-value" name="cantidad" type="text"
+                            class="form-control form-control-sm text-center" value="1" style="width: 50px;" readonly>
+                        <button id="aumentar-cantidad" type="button" class="btn btn-primary btn-sm ms-2"
+                            onclick="aumentar()">+</button>
+                    </div>
+                    <button class="btn btn-primary w-100">Agregar al carrito</button>
+
+                </form>
+            }
+            else
+            {
+                <label class="me-3">Producto en carrito</label>
+                <a asp-controller="Carrito" asp-action="Index" class="btn btn-primary">Ir a carrito</a>
+            }
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function aumentar() {
+        let item = document.getElementById("cantidad-value");
+        if (item) {
+            let num = parseInt(item.value);
+            if (num != null) {
+                if (num < 10) {
+                    item.style.color = '#8a8a8a'
+                    item.value = (num + 1);
+                }
+
+            } else {
+                item.value = 0;
+            }
+        }
+    }
+
+    function disminuir() {
+        let item = document.getElementById("cantidad-value");
+        if (item) {
+            let num = parseInt(item.value);
+            if (num != null) {
+                if (num > 1) {
+                    item.style.color = '#8a8a8a'
+                    item.value = (num - 1);
+                }
+
+            } else {
+                item.value = 0;
+            }
+        }
+
+    }
+
+
+</script>

@@ -1,0 +1,20 @@
+<div class="card">
+    <div class="d-flex align-items-center justify-content-center p-4 border rounded ">
+        <div class="d-flex align-items-center me-4">
+            <div class="rounded bg-warning d-flex justify-content-center align-items-center"
+                style="width: 80px; height: 80px;">
+                <i class="bi bi-check-lg text-white" style="font-size: 40px;"></i>
+            </div>
+        </div>
+        <div>
+            <h5 class="fw-bold mb-1">Se agregó al carrito</h5>
+            <p class="text-muted mb-3">Puedes seguir comprando o realizar el pedido</p>
+            <div class="d-flex">
+                <a asp-controller="Comprar" asp-action="Index" class="btn btn-outline-secondary me-2">Seguir
+                    comprando</a>
+                <a asp-controller="Carrito" asp-action="Index" class="btn btn-primary">Ir al carrito</a>
+            </div>
+        </div>
+    </div>
+
+</div>

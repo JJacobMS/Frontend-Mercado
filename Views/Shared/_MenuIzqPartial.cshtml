@@ -5,7 +5,7 @@
     {
         @if (User.FindFirstValue(ClaimTypes.Role) == "Usuario")
         {
-            <a class="nav-link" asp-controller="Compras" asp-action="Index">Comprar</a>
+            <a class="nav-link" asp-controller="Comprar" asp-action="Index">Comprar</a>
             <a class="nav-link" asp-controller="Carrito" asp-action="Index"><i class="bi bi-cart"></i></a>
             <a class="nav-link" asp-controller="Perfil" asp-action="Index">Mi perfil</a>
         }

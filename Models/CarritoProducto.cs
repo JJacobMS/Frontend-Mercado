@@ -6,12 +6,11 @@ public class CarritoProducto
 {
 
     public int? CarritoId { get; set; }
+    public int? ProductoId { get; set; }
 
-    [JsonPropertyName("cantidad")]
     public int? Cantidad { get; set; }
     [JsonPropertyName("totalprecio")]
     public decimal? TotalPrecio { get; set; }
-    [JsonPropertyName("producto")]
     public Producto? Producto { get; set; }
 
 }

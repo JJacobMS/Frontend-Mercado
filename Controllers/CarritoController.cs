@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace frontendnet;
 
 [Authorize(Roles = "Usuario")]
-public class CarritoController(CarritosClientService carritos) : Controller
+public class CarritoController(CarritosClientService carritos, IConfiguration configuration) : Controller
 {
     
     public IActionResult Index()
@@ -19,6 +19,7 @@ public class CarritoController(CarritosClientService carritos) : Controller
     public async Task<IActionResult> CarritoComprasPartial(){
         List<Carrito>? lista = [];
         List<CarritoProducto> listaproductos = [];
+        ViewBag.Url = configuration["UrlWebAPI"];
         try
         {
             lista = await carritos.GetAsync();
@@ -67,7 +68,6 @@ public class CarritoController(CarritosClientService carritos) : Controller
     {
         try
         {
-            Console.WriteLine(id);
             await carritos.PutAsync(id, cantidad);
             return Json(new { success = true });
         }
@@ -77,7 +77,6 @@ public class CarritoController(CarritosClientService carritos) : Controller
             {
                 return Json(new { success = false, redirectUrl = Url.Action("Salir", "Auth") });
             }
-            Console.WriteLine(ex.Message);
         }
         return BadRequest();
     }
