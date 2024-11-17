@@ -77,7 +77,7 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
             }
         }
         await ProductosDropDownListAsync();
-        ModelState.AddModelError("Nombre", "No ha sido posible realizar la acción. Inténtelo nuevamente.");
+        ModelState.AddModelError("Titulo", "No ha sido posible realizar la acción. Inténtelo nuevamente.");
         return View(itemToCreate);
     }
 
@@ -126,7 +126,7 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
             }
         }
         await ProductosDropDownListAsync();
-        ModelState.AddModelError("Nombre", "No ha sido posible realizar la acción. Inténtelo nuevamente.");
+        ModelState.AddModelError("Titulo", "No ha sido posible realizar la acción. Inténtelo nuevamente.");
         return View(itemToEdit);
     }
 
