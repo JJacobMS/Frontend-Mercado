@@ -28,7 +28,7 @@
             const productoId = $(this).data('id');
 
             $.ajax({
-                url: '/Carrito/EliminarProducto',
+                url: '/Carrito/Producto',
                 type: 'DELETE',
                 data: { id: productoId },
                 success: function (response) {
@@ -69,7 +69,7 @@
 
         function modificarProducto(productoId, cantidad){
             $.ajax({
-                url: '/Carrito/ModificarProducto',
+                url: '/Carrito/Producto',
                 type: 'PUT',
                 data: { id: productoId, cantidad: cantidad },
                 success: function (response) {

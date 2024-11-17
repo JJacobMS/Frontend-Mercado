@@ -54,7 +54,7 @@ public class ComprarController(ProductosClientService productos, IConfiguration 
     }
 
     [HttpPost]
-    public async Task<IActionResult> AgregarCarritoAsync(int id, int cantidad)
+    public async Task<IActionResult> CarritoAsync(int id, int cantidad)
     {
         try
         {

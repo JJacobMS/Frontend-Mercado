@@ -46,7 +46,7 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
     }
 
     [HttpDelete]
-    public async Task<IActionResult> EliminarProducto(int id)
+    public async Task<IActionResult> Producto(int id)
     {
         try
         {
@@ -64,7 +64,7 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
     }
 
     [HttpPut]
-    public async Task<IActionResult> ModificarProducto(int id, int cantidad)
+    public async Task<IActionResult> Producto(int id, int cantidad)
     {
         try
         {
