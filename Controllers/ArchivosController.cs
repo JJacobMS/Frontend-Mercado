@@ -56,7 +56,7 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
     public async Task<IActionResult> CrearAsync(Upload itemToCreate)
     {
         ViewBag.url = configuration["UrlWebAPI"];
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
             try
             {
