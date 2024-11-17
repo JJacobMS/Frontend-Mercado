@@ -6,7 +6,6 @@ namespace frontendnet.Models;
 
 public class Producto
 {
-    [JsonPropertyName("id")]
     [Display(Name = "Id")]
     public int? ProductoId { get; set; }
 
