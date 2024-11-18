@@ -48,6 +48,10 @@ builder.Services.AddHttpClient<CarritosClientService>(httpClient => { httpClient
 .AddHttpMessageHandler<RefrescaTokenDelegatingHandler>();
 
 
+builder.Services.AddHttpClient<ComprasClientService>(httpClient => { httpClient.BaseAddress = new Uri(UrlWebAPI!); })
+.AddHttpMessageHandler<EnviarBearerDelegatingHandler>()
+.AddHttpMessageHandler<RefrescaTokenDelegatingHandler>();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
