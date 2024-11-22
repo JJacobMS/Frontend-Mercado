@@ -10,13 +10,14 @@ namespace frontendnet;
 [Authorize(Roles = "Usuario")]
 public class CarritoController(CarritosClientService carritos, IConfiguration configuration) : Controller
 {
-    
+
     public IActionResult Index()
     {
         return View();
     }
 
-    public async Task<IActionResult> CarritoComprasPartial(){
+    public async Task<IActionResult> CarritoComprasPartial()
+    {
         List<Carrito>? lista = [];
         List<CarritoProducto> listaproductos = [];
         ViewBag.Url = configuration["UrlWebAPI"];
@@ -45,22 +46,52 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
         return PartialView("_PartialCardCarrito", listaproductos);
     }
 
-    [HttpDelete]
-    public async Task<IActionResult> Producto(int id)
+    public async Task<IActionResult> Eliminar(int itemid, bool? showError = false)
     {
+        List<CarritoProducto>? itemToDelete = null;
+        CarritoProducto? itemCarrito = null;
         try
         {
-            await carritos.DeleteAsync(id);
-            return Json(new { success = true });
+            itemToDelete = await carritos.GetProductoCarritoAsync(itemid);
+            if (itemToDelete == null || itemToDelete.Count == 0 || itemToDelete.Count > 1)
+            {
+                return NotFound();
+            }
+            else{
+                itemCarrito = itemToDelete[0];
+            }
+            if (showError.GetValueOrDefault())
+            {
+                ViewData["ErrorMessage"] = "No ha sido posible realizar la acción. Inténtelo nuevamente.";
+            }
         }
         catch (HttpRequestException ex)
         {
             if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
-                return Json(new { success = false, redirectUrl = Url.Action("Salir", "Auth") });
+                return RedirectToAction("Salir", "Auth");
             }
         }
-        return BadRequest();
+        return View(itemCarrito);
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> ProductoCarrito(int id)
+    {
+        try
+        {
+            await carritos.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (HttpRequestException ex)
+        {
+            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                return RedirectToAction("Salir", "Auth");
+            }
+        }
+        return RedirectToAction(nameof(Eliminar), new { itemid = id, showerror = true });
     }
 
     [HttpPut]
