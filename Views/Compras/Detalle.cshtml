@@ -1,0 +1,114 @@
+@model Compra
+@{
+    ViewData["Title"] = "Compra";
+    ViewData["SubTitle"] = "Detalle";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a class="text-decoration-none" title="Regresar al listado"
+                asp-action="Index">Listado</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewData["SubTitle"]</li>
+    </ol>
+</nav>
+
+<h2 class="text-center mb-3">@ViewData["Title"] <small class="text-muted fs-5">@ViewData["SubTitle"]</small></h2>
+
+
+@if (Model != null && Model.CompraProducto != null && Model.Usuario != null)
+{
+    <div class="card mb-4 shadow-sm">
+        <div class="row p-5">
+            <div>
+                <div class="row align-items-center">     
+                    <div class="col-md-10">
+                        <div class="row mb-4">
+                            <div class="col-md-4 d-flex">
+                                <h4 class="fw-bold me-2">Compra ID:</h4>
+                                <h4 class="mb-0">@Html.DisplayFor(modelItem => Model.CompraId)</h4>
+                            </div>
+                        </div>
+
+                        <div >
+                            <label class="fw-bold">Fecha de compra:</label>
+                            <p>@Html.DisplayFor(modelItem => Model.FechaPedido)</p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="fw-bold">Total de productos:</label>
+                                <p>@Html.DisplayFor(modelItem => Model.TotalProductos)<span> productos</span></p>
+                                <label class="fw-bold">Total de compra:</label>
+                                <p>@Html.DisplayFor(modelItem => Model.TotalCosto)</p>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="fw-bold">Correo del cliente:</label>
+                                <p>@Html.DisplayFor(modelItem => Model.Usuario.Email)</p>
+                                <label class="fw-bold">Nombre del cliente:</label>
+                                <p>@Html.DisplayFor(modelItem => Model.Usuario.Nombre)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-top">
+                        <p class="display-3 text-primary mb-0">
+                            <i class="bi bi-box-seam-fill"></i>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <h5 class="pt-0 pb-2">Productos de la compra</h5>
+
+            @if (Model.CompraProducto.Count() > 0)
+            {
+                <div class="table-responsive pt-0">
+                    <table class="table table-striped table-bordered small">
+                        <thead class="text-center">
+                            <tr>
+                                <th>
+                                    Título
+                                </th>
+                                <th>
+                                    Descripción
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.CompraProducto)
+                            {
+                                if (item.Producto != null)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Producto.Titulo)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Producto.Descripcion)
+                                        </td>
+                                    </tr>
+                                }
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="mt-5">
+                    <div class="alert alert-warning" role="alert">
+                        No se han encontrado elementos. Inténtelo de nuevo más tarde.
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </div>
+}
+
+<div class="text-center mt-3">
+    <a class="btn btn-sm btn-outline-secondary" asp-action="Index" title="Cancelar">Cancelar</a>
+</div>

@@ -108,8 +108,6 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
     public async Task<IActionResult> EditarAsync(int id, Producto itemToEdit)
     {
         if (id != itemToEdit.ProductoId) return NotFound();
-
-        ViewBag.Url = configuration["UrlWebAPI"];
         if (ModelState.IsValid)
         {
             try
@@ -127,6 +125,7 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
         }
         await ProductosDropDownListAsync();
         ModelState.AddModelError("Titulo", "No ha sido posible realizar la acción. Inténtelo nuevamente.");
+        ViewBag.Url = configuration["UrlWebAPI"];
         return View(itemToEdit);
     }
 
@@ -206,6 +205,7 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
                 return RedirectToAction("Salir", "Auth");
             }
         }
+        ViewBag.Url = configuration["UrlWebAPI"];        
         ViewData["ProductoId"] = itemToView?.ProductoId;
         return View(itemToView);
     }
@@ -230,6 +230,7 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
                 return RedirectToAction("Salir", "Auth");
             }
         }
+        ViewBag.Url = configuration["UrlWebAPI"];
         return View(itemToView);
     }
 
@@ -264,6 +265,7 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
                 }
             }
         }
+        ViewBag.Url = configuration["UrlWebAPI"];
         ModelState.AddModelError("id", "No ha sido posible realizar la acción. Inténtelo nuevamente.");
         await CategoriasDropDownListAsync();
         return View(new ProductoCategoria { Producto = producto });
@@ -300,6 +302,7 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
                 return RedirectToAction("Salir", "Auth");
             }
         }
+        ViewBag.Url = configuration["UrlWebAPI"];
         return View(itemToView);
     }
 
@@ -321,17 +324,20 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
                 }
             }
         }
+        ViewBag.Url = configuration["UrlWebAPI"];
         return RedirectToAction(nameof(CategoriasRemover), new { id, categoriaid, showError = true });
     }
 
     private async Task CategoriasDropDownListAsync(object? itemSeleccionado = null)
     {
+        ViewBag.Url = configuration["UrlWebAPI"];
         var listado = await categorias.GetAsync();
         ViewBag.Categoria = new SelectList(listado, "CategoriaId", "Nombre", itemSeleccionado);
     }
 
     private async Task ProductosDropDownListAsync(object? itemSeleccionado = null)
     {
+        ViewBag.Url = configuration["UrlWebAPI"];
         var listado = await archivos.GetAsync();
         ViewBag.Archivo = new SelectList(listado, "ArchivoId", "Nombre", itemSeleccionado);
     }

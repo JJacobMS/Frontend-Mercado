@@ -1,0 +1,85 @@
+@model List<Compra>
+@{
+    ViewData["Title"] = "Compras";
+    ViewData["SubTitle"] = "Listado";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item active" aria-current="page">@ViewData["SubTitle"]</li>
+    </ol>
+</nav>
+
+<h2 class="text-center mb-3">@ViewData["Title"] <small class="text-muted fs-5">@ViewData["SubTitle"]</small></h2>
+<div class="row small">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3"></div>
+
+    <div class="row small mb-3">
+        <div class="col text-end">
+            Mostrando @Model.Count() elementos
+        </div>
+    </div>
+</div>
+
+@if (Model.Count() > 0)
+{
+    <div>
+        @foreach (var item in Model)
+        {
+            if (item != null && item.Usuario != null)
+            {
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body m-3">
+                        <div class="row mb-1">
+                            <div class="col-4 d-flex align-items-center">
+                                <h6 class="mb-0">Compra ID:</h6>
+                                <div class="m-4 my-0">
+                                    <p class="mb-0">@Html.DisplayFor(modelItem => item.CompraId)</p>
+                                </div>
+                            </div>
+                            <div class="col-8 d-flex align-items-center">
+                                <h6 class="mb-0">Fecha de compra:</h6>
+                                <div class="m-4 my-0">
+                                    <p class="mb-0">@Html.DisplayFor(modelItem => item.FechaPedido)</p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="fw-bold">Total de productos:</label>
+                                <p>@Html.DisplayFor(modelItem => item.TotalProductos)<span> productos</span></p>
+                                <label class="fw-bold">Total de compra:</label>
+                                <p>@Html.DisplayFor(modelItem => item.TotalCosto)</p>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="fw-bold">Correo del cliente:</label>
+                                <p>@Html.DisplayFor(modelItem => item.Usuario.Email)</p>
+                                <label class="fw-bold">Nombre del cliente:</label>
+                                <p>@Html.DisplayFor(modelItem => item.Usuario.Nombre)</p>
+                            </div>
+
+                            <div class="col-md-4 text-center">
+                                <p class="display-3 text-primary">
+                                    <i class="bi bi-box-seam-fill" style="width: 60px;"></i>
+                                </p>
+                                <a class="btn btn-primary w-75 rounded-pill" asp-action="Detalle" asp-route-id="@item.CompraId">Ver detalles</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}
+else
+{
+    <div class="mt-5">
+        <div class="alert alert-warning" role="alert">
+            <i class="bi bi-exclamation-triangle me-1"></i>
+            No se han encontrado elementos. Inténtelo de nuevo más tarde.
+        </div>
+    </div>
+}

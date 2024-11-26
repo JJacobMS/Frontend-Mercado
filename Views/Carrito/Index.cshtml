@@ -23,34 +23,6 @@
     <script>
         $('#partial-carrito').load("/Carrito/CarritoComprasPartial")
 
-        $(document).on('click', '.btn-eliminar', 
-        function () {
-            const productoId = $(this).data('id');
-
-            $.ajax({
-                url: '/Carrito/Producto',
-                type: 'DELETE',
-                data: { id: productoId },
-                success: function (response) {
-                    if(response.success) {
-                        $('#partial-carrito').load('/Carrito/CarritoComprasPartial');
-                    } else if(response.redirectUrl) {
-                        window.location.href = response.redirectUrl;
-                    }
-                },
-                error: function () {
-                    const mensaje = document.getElementById('mensaje');
-                    if(mensaje){
-                        mensaje.style.display = 'block';
-                    }
-                    setTimeout(() => {
-                        mensaje.style.display = 'none';
-                    }, 3000);
-
-                    }
-                });
-            });
-
         $(document).on('click', '.btn-modificar', function () {
             const productoId = $(this).data('id');
             const id = "cantidad-" + productoId;

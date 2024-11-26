@@ -34,8 +34,8 @@
                                         class="btn btn-primary btn-sm ms-2">+</button>
                                 </div>
                                 <div class="product-actions mt-3 d-flex ">
-                                    <button class="btn btn-outline-secondary btn-sm btn-eliminar"
-                                        data-id="@item.Producto.ProductoId">Eliminar</button>
+                                    <a class="btn btn-outline-secondary btn-sm btn-eliminar" asp-action="Eliminar"
+                                        asp-route-itemid="@item.Producto.ProductoId">Eliminar</a>
                                     <button class="btn btn-primary btn-sm ms-2 btn-modificar"
                                         data-id="@item.Producto.ProductoId">Modificar</button>
                                 </div>
@@ -97,7 +97,7 @@
         let item = document.getElementById(id);
         if (item) {
             let num = parseInt(item.value);
-            if (num != null) {
+            if (!isNaN(num)) {
                 if (num < 10) {
                     item.style.color = '#8a8a8a'
                     item.value = (num + 1);
@@ -114,7 +114,7 @@
         let item = document.getElementById(id);
         if (item) {
             let num = parseInt(item.value);
-            if (num != null) {
+            if (!isNaN(num)) {
                 if (num > 1) {
                     item.style.color = '#8a8a8a'
                     item.value = (num - 1);
