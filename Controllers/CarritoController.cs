@@ -95,10 +95,16 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
     }
 
     [HttpPut]
-    public async Task<IActionResult> Producto(int id, int cantidad)
+    public async Task<IActionResult> Producto(int id, int cantidad, int cantidadDisponible)
     {
         try
         {
+            
+            if(cantidad > cantidadDisponible){
+                TempData["ErrorCantidad"] = "No hay suficientes productos disponibles para la compra.";
+                TempData["IdError"] = id;       
+                return Json(new { success = false, redirectUrl = Url.Action("Index")});
+            }
             await carritos.PutAsync(id, cantidad);
             return Json(new { success = true });
         }

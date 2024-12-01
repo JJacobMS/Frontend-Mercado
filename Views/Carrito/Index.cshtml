@@ -10,13 +10,15 @@
 
 </div>
 
-<div id="mensaje" class="alert alert-danger text-center position-absolute top-50 start-50 translate-middle shadow-lg p-4 rounded" style="display: none; z-index: 1050;">
-        <div class="d-flex flex-column align-items-center">
-            <div class="mb-3">
-                <span class="text-danger fs-1"><i class="bi bi-exclamation-triangle"></i></span>
-            </div>
-            <p class="text-danger mb-3 fw-bold fs-4">Ocurrió un error inesperado</p>
+<div id="mensaje"
+    class="alert alert-danger text-center position-absolute top-50 start-50 translate-middle shadow-lg p-4 rounded"
+    style="display: none; z-index: 1050;">
+    <div class="d-flex flex-column align-items-center">
+        <div class="mb-3">
+            <span class="text-danger fs-1"><i class="bi bi-exclamation-triangle"></i></span>
         </div>
+        <p class="text-danger mb-3 fw-bold fs-4">Ocurrió un error inesperado</p>
+    </div>
 </div>
 
 @section Scripts {
@@ -25,13 +27,15 @@
 
         $(document).on('click', '.btn-modificar', function () {
             const productoId = $(this).data('id');
+            const cantidadDisponible = $(this).data('disponible');
+
             const id = "cantidad-" + productoId;
             let item = document.getElementById(id);
             if (item) {
                 let num = parseInt(item.value);
                 if (num != null) {
                     if (num >= 1 && num <= 10) {
-                        modificarProducto(productoId, num)
+                        modificarProducto(productoId, num, cantidadDisponible)
                     }
                 } else {
                     item.value = 0;
@@ -39,29 +43,29 @@
             }
         });
 
-        function modificarProducto(productoId, cantidad){
+        function modificarProducto(productoId, cantidad, cantidadDisponible) {
             $.ajax({
                 url: '/Carrito/Producto',
                 type: 'PUT',
-                data: { id: productoId, cantidad: cantidad },
+                data: { id: productoId, cantidad: cantidad, cantidadDisponible: cantidadDisponible },
                 success: function (response) {
-                    if(response.success) {
+                    if (response.success) {
                         $('#partial-carrito').load('/Carrito/CarritoComprasPartial');
-                    } else if(response.redirectUrl) {
+                    } else if (response.redirectUrl) {
                         window.location.href = response.redirectUrl;
                     }
                 },
                 error: function () {
                     const mensaje = document.getElementById('mensaje');
-                    if(mensaje){
+                    if (mensaje) {
                         mensaje.style.display = 'block';
                     }
                     setTimeout(() => {
                         mensaje.style.display = 'none';
                     }, 3000);
 
-                    }
-                });
+                }
+            });
         }
     </script>
 }

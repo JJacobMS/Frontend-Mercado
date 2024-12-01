@@ -22,6 +22,10 @@
                     <div class="form-text text-body">@Model.Precio</div>
                 </div>
                 <div class="mb-3 ps-3">
+                    <label asp-for="Precio" class="form-label form-text">Cantidad Disponible</label>
+                    <div class="form-text text-body">@Model.CantidadDisponible</div>
+                </div>
+                <div class="mb-3 ps-3">
                     <label asp-for="ArchivoId" class="form-label form-text">Archivo Id</label>
                     <div class="form-text text-body">@(Model.ArchivoId == null ? "N/A" : $"Id: {Model.ArchivoId}")</div>
                 </div>

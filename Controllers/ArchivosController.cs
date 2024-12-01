@@ -15,11 +15,11 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
         {
             lista = await archivos.GetAsync();
         }
-        catch(HttpRequestException ex)
+        catch (HttpRequestException ex)
         {
-            if(ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
-                return RedirectToAction("Salir", "Auth");   
+                return RedirectToAction("Salir", "Auth");
             }
         }
         ViewBag.Url = configuration["UrlWebAPI"];
@@ -31,16 +31,16 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
         try
         {
             item = await archivos.GetAsync(id);
-            if(item==null)
+            if (item == null)
             {
                 return NotFound();
             }
         }
-        catch(HttpRequestException ex)
+        catch (HttpRequestException ex)
         {
-            if(ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
-                return RedirectToAction("Salir", "Auth");   
+                return RedirectToAction("Salir", "Auth");
             }
         }
         ViewBag.Url = configuration["UrlWebAPI"];
@@ -93,7 +93,7 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
             Archivo? itemToEdit = await archivos.GetAsync(id);
             ViewBag.ArchivoId = itemToEdit?.ArchivoId;
             ViewBag.Nombre = itemToEdit?.Nombre;
-            if (itemToEdit == null) 
+            if (itemToEdit == null)
             {
                 return NotFound();
             }
@@ -109,15 +109,29 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
     [HttpPost]
     public async Task<IActionResult> EditarAsync(int id, Upload itemToEdit)
     {
-        if (id != itemToEdit.ArchivoId) 
+        if (itemToEdit == null)
         {
             return NotFound();
-        } 
+        }
+
+        if (id != itemToEdit.ArchivoId)
+        {
+            return NotFound();
+        }
+
         ViewBag.url = configuration["UrlWebAPI"];
+        ViewBag.ArchivoId = itemToEdit?.ArchivoId;
+        ViewBag.Nombre = itemToEdit?.Nombre;
+
         if (ModelState.IsValid)
         {
             try
             {
+                if (itemToEdit == null)
+                {
+                    return NotFound();
+                }
+                
                 if ((itemToEdit.Portada.Length / 1024) > 100)
                 {
                     ModelState.AddModelError("Portada", $"El archivo de {itemToEdit.Portada.Length / 1024} KB supera el tampercio máximo permitido.");
@@ -133,7 +147,7 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
             }
             catch (HttpRequestException ex)
             {
-                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized) 
+                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Salir", "Auth");
                 }
@@ -148,18 +162,18 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
         try
         {
             itemToDelete = await archivos.GetAsync(id);
-            if (itemToDelete == null) 
+            if (itemToDelete == null)
             {
                 return NotFound();
-            } 
-            if (showError.GetValueOrDefault()) 
+            }
+            if (showError.GetValueOrDefault())
             {
                 ViewData["ErrorMessage"] = "No ha sido posible realizar la acción. Inténtelo nuevamente.";
             }
         }
         catch (HttpRequestException ex)
         {
-            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized) 
+            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("Salir", "Auth");
             }
@@ -181,7 +195,7 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
             }
             catch (HttpRequestException ex)
             {
-                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized) 
+                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Salir", "Auth");
                 }
