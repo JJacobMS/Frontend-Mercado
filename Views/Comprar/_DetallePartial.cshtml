@@ -21,30 +21,44 @@
 
             <h4 class="text-primary fw-bold">@Html.DisplayFor(model => model.Precio)</h4>
 
-            <p class="text-success fw-semibold">Producto disponible</p>
-
-            @if (!ViewBag.EnCarrito)
+            @if (Model.CantidadDisponible > 0)
             {
-                <form asp-action="Carrito" asp-route-id=@Model.ProductoId>
-                    <div class="d-flex align-items-center mb-3">
-                        <label class="me-3">Selecciona la cantidad:</label>
-                        <button id="disminuir-cantidad" type="button" class="btn btn-primary btn-sm me-2"
-                            onclick="disminuir()">-</button>
-                        <input id="cantidad-value" name="cantidad" type="text"
-                            class="form-control form-control-sm text-center" value="1" style="width: 50px;" readonly>
-                        <button id="aumentar-cantidad" type="button" class="btn btn-primary btn-sm ms-2"
-                            onclick="aumentar()">+</button>
-                    </div>
-                    <button class="btn btn-primary w-100">Agregar al carrito</button>
+                <p class="text-success fw-semibold">Cantidad disponible: <span>@Html.DisplayFor(model =>
+                    model.CantidadDisponible)</span></p>
 
-                </form>
+                @if (!ViewBag.EnCarrito)
+                {
+                    <form asp-action="Carrito" asp-route-id=@Model.ProductoId
+                        asp-route-cantidadDisponible="@Model.CantidadDisponible">
+                        <div class="d-flex align-items-center mb-3">
+                            <label class="me-3">Selecciona la cantidad:</label>
+                            <button id="disminuir-cantidad" type="button" class="btn btn-primary btn-sm me-2"
+                                onclick="disminuir()">-</button>
+                            <input id="cantidad-value" name="cantidad" type="text"
+                                class="form-control form-control-sm text-center" value="1" style="width: 50px;" readonly>
+                            <button id="aumentar-cantidad" type="button" class="btn btn-primary btn-sm ms-2"
+                                onclick="aumentar()">+</button>
+                        </div>
+                        @if (TempData["ErrorCantidad"] != null)
+                        {
+                            <div>
+                                <p class="text-danger fw-semibold">@TempData["ErrorCantidad"]</p>
+                            </div>
+                        }
+                        <button class="btn btn-primary w-100">Agregar al carrito</button>
+
+                    </form>
+                }
+                else
+                {
+                    <label class="me-3">Producto en carrito</label>
+                    <a asp-controller="Carrito" asp-action="Index" class="btn btn-primary">Ir a carrito</a>
+                }
             }
             else
             {
-                <label class="me-3">Producto en carrito</label>
-                <a asp-controller="Carrito" asp-action="Index" class="btn btn-primary">Ir a carrito</a>
+                <p class="text-danger fw-semibold">Producto agotado </p>
             }
-
 
         </div>
     </div>

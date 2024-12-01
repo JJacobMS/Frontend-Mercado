@@ -25,6 +25,9 @@ public class Producto
 
     [Display(Name = "Portada")]
     public int? ArchivoId { get; set; }
+    [Required(ErrorMessage = "El campo es obligatorio.")]
+    [Range(0, int.MaxValue, ErrorMessage = "Sólo números positivos")]
+    public int? CantidadDisponible { get; set; }
 
     [Display(Name = "Eliminable")]
     public bool Protegida { get; set; } = false;

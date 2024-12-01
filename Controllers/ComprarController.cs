@@ -39,7 +39,8 @@ public class ComprarController(ProductosClientService productos, IConfiguration 
             if (item == null) return NotFound();
 
             productosCarrito = await productos.GetProductoCarritoAsync(id);
-            if(productosCarrito != null && productosCarrito.Count > 0){
+            if (productosCarrito != null && productosCarrito.Count > 0)
+            {
                 ViewBag.EnCarrito = true;
             }
         }
@@ -54,10 +55,16 @@ public class ComprarController(ProductosClientService productos, IConfiguration 
     }
 
     [HttpPost]
-    public async Task<IActionResult> CarritoAsync(int id, int cantidad)
+    public async Task<IActionResult> CarritoAsync(int id, int? cantidadDisponible, int cantidad)
     {
         try
         {
+            if (cantidad > cantidadDisponible)
+            {
+                TempData["ErrorCantidad"] = "No hay suficientes productos disponibles para la compra.";
+                return RedirectToAction("Detalle", new { id });
+            }
+
             await productos.PostProductoCarritoAsync(id, cantidad);
             return View("AgregadoCarrito");
         }

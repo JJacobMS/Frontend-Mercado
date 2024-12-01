@@ -39,6 +39,11 @@
                         <span asp-validation-for="Precio" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3">
+                        <input asp-for="CantidadDisponible" placeholder="Cantidad Disponible" class="form-control" />
+                        <label asp-for="CantidadDisponible" class="form-label"></label>
+                        <span asp-validation-for="CantidadDisponible" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating mb-3">
                         <select class="form-select" asp-for="ArchivoId" class="form-control" asp-items="ViewBag.Archivo">
                             <option value="">Producto sin portada</option>
                         </select>

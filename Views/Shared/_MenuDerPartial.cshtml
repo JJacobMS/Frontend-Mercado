@@ -7,7 +7,7 @@
     </div>
     @if (User.Identity!=null && User.Identity.IsAuthenticated == true)
     {
-        <a class="nav-link" asp-controller="Perfil">Hola @User.Identity.Name</a>
+        <a class="nav-link" asp-controller="Perfil" asp-action="Index">Hola @User.Identity.Name</a>
         <a class="nav-link" asp-controller="Auth" asp-action="Salir">Salir</a>
     }
     else

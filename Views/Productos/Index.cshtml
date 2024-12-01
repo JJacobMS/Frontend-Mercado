@@ -53,6 +53,9 @@
                     <th>
                         @Html.DisplayNameFor(model => model.First().Precio)
                     </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().CantidadDisponible)
+                    </th>
                     @if (ViewBag.SoloAdmin == true)
                     {
                         <th width="1"></th>
@@ -82,6 +85,9 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Precio)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CantidadDisponible)
                         </td>
                         <td class="text-center">
                             <a class="text-decoration-none small text-uppercase" asp-action="Detalle" asp-route-id="@item.ProductoId">Detalle</a>
