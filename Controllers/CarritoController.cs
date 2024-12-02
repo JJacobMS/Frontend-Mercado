@@ -13,6 +13,7 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
 
     public IActionResult Index()
     {
+        ViewBag.Url = configuration["UrlWebAPI"];
         return View();
     }
 
@@ -50,6 +51,7 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
     {
         List<CarritoProducto>? itemToDelete = null;
         CarritoProducto? itemCarrito = null;
+        ViewBag.Url = configuration["UrlWebAPI"];
         try
         {
             itemToDelete = await carritos.GetProductoCarritoAsync(itemid);
@@ -79,6 +81,7 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
     [HttpPost]
     public async Task<IActionResult> ProductoCarrito(int id)
     {
+        ViewBag.Url = configuration["UrlWebAPI"];
         try
         {
             await carritos.DeleteAsync(id);
@@ -97,6 +100,7 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
     [HttpPut]
     public async Task<IActionResult> Producto(int id, int cantidad, int cantidadDisponible)
     {
+        ViewBag.Url = configuration["UrlWebAPI"];
         try
         {
             
