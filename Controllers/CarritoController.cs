@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace frontendnet;
 
 [Authorize(Roles = "Usuario")]
-public class CarritoController(CarritosClientService carritos, IConfiguration configuration) : Controller
+public class CarritoController(CarritosClientService carritos, ComprasClientService compras, IConfiguration configuration) : Controller
 {
 
     public IActionResult Index()
@@ -57,7 +57,8 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
             {
                 return NotFound();
             }
-            else{
+            else
+            {
                 itemCarrito = itemToDelete[0];
             }
             if (showError.GetValueOrDefault())
@@ -99,11 +100,12 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
     {
         try
         {
-            
-            if(cantidad > cantidadDisponible){
+
+            if (cantidad > cantidadDisponible)
+            {
                 TempData["ErrorCantidad"] = "No hay suficientes productos disponibles para la compra.";
-                TempData["IdError"] = id;       
-                return Json(new { success = false, redirectUrl = Url.Action("Index")});
+                TempData["IdError"] = id;
+                return Json(new { success = false, redirectUrl = Url.Action("Index") });
             }
             await carritos.PutAsync(id, cantidad);
             return Json(new { success = true });
@@ -118,4 +120,71 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
         return BadRequest();
     }
 
+    public async Task<IActionResult> Comprar()
+    {
+        try
+        {
+            Console.WriteLine("Entró al método Comprar.");
+            return RedirectToAction("CompraExitosa", "Carrito");
+        }
+        catch (Exception ex)
+        {
+            TempData["MensajeError"] = "Ocurrió un error inesperado al procesar la compra.";
+            return RedirectToAction("Index", "Carrito");
+        }
+    }
+
+
+    public IActionResult Comprasadasdsar()
+    {
+        try
+        {
+            Console.WriteLine("Entró al método Comprar.");
+            // Procesa la compra
+            Compra compranueva = new Compra();
+            //Compra compranueva = new Compra();
+            //await compras.PostAsync(compranueva);
+            // Aquí puedes añadir la lógica para registrar la compra (si aplica)
+
+            // Redirige a la acción que muestra la vista de resumen de compra
+            return RedirectToAction("Compra", "Carrito");
+            return RedirectToAction("Compra");
+        }
+        catch (Exception)
+        {
+            TempData["MensajeError"] = "Ocurrió un error inesperado al procesar la compra.";
+            return RedirectToAction("Index", "Carrito");
+        }
+    }
+
+    public async Task<IActionResult> Compraaaaaasdaafq32()
+    {
+        Console.WriteLine("Método Comprar llamado");
+        ViewData["ErrorMessage"] = "No ha sido posible realizar la acción. Inténtelo nuevamente.";
+        TempData["MensajeError"] = "Hubo un problema al procesar la compra.";
+        //return RedirectToAction("Compra");
+        try
+        {
+            Compra compranueva = new Compra();
+            //await compras.PostAsync(compranueva);
+            ViewData["ErrorMessage"] = "No ha sido posible realizar la acción. Inténtelo nuevamente.";
+            TempData["MensajeError"] = "Hubo un problema al procesar la compra.";
+            return Json(new { success = false });
+        }
+        catch (HttpRequestException ex)
+        {
+            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                return Json(new { success = false, redirectUrl = Url.Action("Salir", "Auth") });
+            }
+        }
+        catch (Exception)
+        {
+            TempData["MensajeError"] = "Ocurrió un error inesperado al procesar la compra.";
+        }
+
+        return Json(new { success = false });
+    }
 }
+
+

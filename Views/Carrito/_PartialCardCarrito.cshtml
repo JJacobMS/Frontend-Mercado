@@ -10,7 +10,7 @@
 
     @if (Model.Count() > 0)
     {
-        <div class="w-75 mr-4">
+        <div class="w-75 me-4">
             @foreach (var item in Model)
             {
                 if (item.Producto != null)
@@ -70,7 +70,7 @@
             }
         </div>
 
-        <div class="card w-25 border rounded p-3">
+        <div class="card w-35 border rounded p-3 ms-4">
             <div class="d-flex align-items-center flex-column ">
                 <h6 class="fw-bold mb-4">Resumen de compra</h6>
                 <div class="d-flex w-100">
@@ -82,11 +82,16 @@
                     if (item.Producto != null)
                     {
                         <div class="d-flex w-100">
-                            <p class="mb-1">@Html.DisplayFor(modelItem => item.Producto.Titulo)</p>
+                            <p class="mb-1">
+                                @Html.DisplayFor(modelItem => item.Producto.Titulo)
+                                <br>
+                                <span class="text-muted">(Cantidad: @Html.DisplayFor(modelItem => item.Cantidad))</span>
+                            </p>
                             <p class="mb-1 ms-auto">$@Html.DisplayFor(modelItem => item.TotalPrecio)</p>
                         </div>
                     }
                 }
+
                 <hr class="w-100 my-3" />
                 @if (Model[0] != null)
                 {
@@ -94,9 +99,7 @@
                         <p class="fw-bold">Total</p>
                         <p class="fw-bold">$@Html.DisplayFor(modelItem => Model[0].TotalPrecio)</p>
                     </div>
-                    <form class="w-100 text-center">
-                        <button type="submit" class="btn btn-primary w-75 rounded-pill">Comprar</button>
-                    </form>
+                    <a class="btn btn-primary w-75 rounded-pill" asp-action="Comprar" asp-controller="Carrito">Comprar</a>
                 }
 
 

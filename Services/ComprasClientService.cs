@@ -12,4 +12,9 @@ public class ComprasClientService(HttpClient client)
     {
         return await client.GetFromJsonAsync<Compra>($"api/compras/{id}");
     }
+    public async Task PostAsync(Compra compra)
+    {
+        var response = await client.PostAsJsonAsync("api/compras", compra);
+        response.EnsureSuccessStatusCode();
+    }
 }
