@@ -57,7 +57,7 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
             itemToDelete = await carritos.GetProductoCarritoAsync(itemid);
             if (itemToDelete == null || itemToDelete.Count == 0 || itemToDelete.Count > 1)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundPage", "Home");
             }
             else{
                 itemCarrito = itemToDelete[0];
@@ -72,6 +72,10 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
             if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("Salir", "Auth");
+            }
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
             }
         }
         return View(itemCarrito);

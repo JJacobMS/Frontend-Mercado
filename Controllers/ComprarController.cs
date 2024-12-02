@@ -36,7 +36,7 @@ public class ComprarController(ProductosClientService productos, IConfiguration 
         try
         {
             item = await productos.GetAsync(id);
-            if (item == null) return NotFound();
+            if (item == null) return RedirectToAction("NotFoundPage", "Home");
 
             productosCarrito = await productos.GetProductoCarritoAsync(id);
             if (productosCarrito != null && productosCarrito.Count > 0)
@@ -49,6 +49,10 @@ public class ComprarController(ProductosClientService productos, IConfiguration 
             if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("Salir", "Auth");
+            }
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
             }
         }
         return View(item);

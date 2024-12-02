@@ -10,9 +10,11 @@ public class Producto
     public int? ProductoId { get; set; }
 
     [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+    [StringLength(255, MinimumLength = 1, ErrorMessage = "El campo {0} debe tener entre {2} y {1} caracteres.")]
     public required string Titulo { get; set; }
 
     [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+    [StringLength(65535, MinimumLength = 1, ErrorMessage = "El campo {0} debe tener entre {2} y {1} caracteres.")]
     [DataType(DataType.MultilineText)]
     public string Descripcion { get; set; } = "Sin descripción";
 
@@ -25,7 +27,7 @@ public class Producto
 
     [Display(Name = "Portada")]
     public int? ArchivoId { get; set; }
-    [Required(ErrorMessage = "El campo es obligatorio.")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio.")]
     [Range(0, int.MaxValue, ErrorMessage = "Sólo números positivos")]
     public int? CantidadDisponible { get; set; }
 

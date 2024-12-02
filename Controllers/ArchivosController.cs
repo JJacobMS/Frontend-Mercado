@@ -33,7 +33,7 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
             item = await archivos.GetAsync(id);
             if (item == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundPage", "Home");
             }
         }
         catch (HttpRequestException ex)
@@ -41,6 +41,10 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
             if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("Salir", "Auth");
+            }
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
             }
         }
         ViewBag.Url = configuration["UrlWebAPI"];
@@ -95,13 +99,17 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
             ViewBag.Nombre = itemToEdit?.Nombre;
             if (itemToEdit == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundPage", "Home");
             }
         }
         catch (HttpRequestException ex)
         {
             if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 return RedirectToAction("Salir", "Auth");
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
+            }
         }
         return View();
     }
@@ -111,12 +119,12 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
     {
         if (itemToEdit == null)
         {
-            return NotFound();
+            return RedirectToAction("NotFoundPage", "Home");
         }
 
         if (id != itemToEdit.ArchivoId)
         {
-            return NotFound();
+            return RedirectToAction("NotFoundPage", "Home");
         }
 
         ViewBag.url = configuration["UrlWebAPI"];
@@ -129,9 +137,9 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
             {
                 if (itemToEdit == null)
                 {
-                    return NotFound();
+                    return RedirectToAction("NotFoundPage", "Home");
                 }
-                
+
                 if ((itemToEdit.Portada.Length / 1024) > 100)
                 {
                     ModelState.AddModelError("Portada", $"El archivo de {itemToEdit.Portada.Length / 1024} KB supera el tampercio máximo permitido.");
@@ -151,6 +159,10 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
                 {
                     return RedirectToAction("Salir", "Auth");
                 }
+                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return RedirectToAction("NotFoundPage", "Home");
+                }
             }
         }
         ModelState.AddModelError("Portada", "No ha sido posible realizar la acción. Inténtelo nuevamente.");
@@ -164,7 +176,7 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
             itemToDelete = await archivos.GetAsync(id);
             if (itemToDelete == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundPage", "Home");
             }
             if (showError.GetValueOrDefault())
             {
@@ -176,6 +188,10 @@ public class ArchivosController(ArchivosClientService archivos, IConfiguration c
             if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("Salir", "Auth");
+            }
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
             }
         }
         ViewBag.Url = configuration["UrlWebAPI"];

@@ -31,13 +31,17 @@ namespace frontendnet
             try
             {
                 item = await categorias.GetAsync(id);
-                if (item == null) return NotFound();
+                if (item == null) return RedirectToAction("NotFoundPage", "Home");
             }
             catch (HttpRequestException ex)
             {
                 if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Salir", "Auth");
+                }            
+                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return RedirectToAction("NotFoundPage", "Home");
                 }            
             }
             return View(item);
@@ -78,7 +82,7 @@ namespace frontendnet
                 itemToEdit = await categorias.GetAsync(id);
                 if (itemToEdit == null)  
                 {
-                    return NotFound();
+                    return RedirectToAction("NotFoundPage", "Home");
                 }
             }
             catch (HttpRequestException ex)
@@ -86,7 +90,11 @@ namespace frontendnet
                 if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Salir", "Auth");
-                }   
+                }
+                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return RedirectToAction("NotFoundPage", "Home");
+                }    
             }
             return View(itemToEdit);
         }
@@ -123,7 +131,7 @@ namespace frontendnet
                 itemToDelete = await categorias.GetAsync(id);
                 if (itemToDelete == null) 
                 {
-                    return NotFound();
+                    return RedirectToAction("NotFoundPage", "Home");
                 } 
                 if (showError.GetValueOrDefault()) 
                 {
@@ -135,6 +143,10 @@ namespace frontendnet
                 if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Salir", "Auth");
+                }
+                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return RedirectToAction("NotFoundPage", "Home");
                 }   
             }
             return View(itemToDelete);
