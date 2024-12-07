@@ -33,23 +33,15 @@
 
                                         <p class="product-price text-muted mb-1">Cantidad actual</p>
                                         
-                                            <div class="product-quantity d-flex align-items-center ">
-                                                <button type="button" onclick="disminuir(@item.Producto.ProductoId)"
-                                                    class="btn btn-primary btn-sm me-2">-</button>
-                                                <input id="cantidad-value" name="cantidad" type="text"
-                                                    class="form-control form-control-sm text-center cantidad-@item.Producto.ProductoId" value="@item.Cantidad" readonly
-                                                    style="width: 50px;">
-                                                <button type="button" onclick="aumentar(@item.Producto.ProductoId)"
-                                                    class="btn btn-primary btn-sm ms-2">+</button>
-                                            </div>
-                                        
-                                        @if (TempData["ErrorCantidad"] != null)
-                                        {
-                                            <div>
-                                                <p class="text-danger fw-semibold">@TempData["ErrorCantidad"]</p>
-                                            </div>
-                                        }
-
+                                        <div class="product-quantity d-flex align-items-center ">
+                                            <button type="button" onclick="disminuir(@item.Producto.ProductoId)"
+                                                class="btn btn-primary btn-sm me-2">-</button>
+                                            <input id="cantidad-value" name="cantidad" type="text"
+                                                class="form-control form-control-sm text-center cantidad-@item.Producto.ProductoId" value="@item.Cantidad" readonly
+                                                style="width: 50px;">
+                                            <button type="button" onclick="aumentar(@item.Producto.ProductoId)"
+                                                class="btn btn-primary btn-sm ms-2">+</button>
+                                        </div>
                                     }
                                     else
                                     {

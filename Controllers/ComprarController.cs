@@ -61,29 +61,41 @@ public class ComprarController(ProductosClientService productos, IConfiguration 
     [HttpPost]
     public async Task<IActionResult> CarritoAsync(int id, int? cantidadDisponible, int cantidad)
     {
-        try
+        if (ModelState.IsValid)
         {
-            if (cantidad > cantidadDisponible)
+            try
             {
-                TempData["ErrorCantidad"] = "No hay suficientes productos disponibles para la compra.";
-                return RedirectToAction("Detalle", new { id });
-            }
+                if (cantidad > cantidadDisponible)
+                {
+                    TempData["ErrorCantidad"] = "No hay suficientes productos disponibles para la compra.";
+                    return RedirectToAction("Detalle", new { id });
+                }
 
-            await productos.PostProductoCarritoAsync(id, cantidad);
-            return View("AgregadoCarrito");
+                await productos.PostProductoCarritoAsync(id, cantidad);
+                return View("AgregadoCarrito");
+            }
+            catch (HttpRequestException ex)
+            {
+                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Salir", "Auth");
+                }
+                if (ex.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    return RedirectToAction("Detalle", new { id = id });
+                }
+            }
         }
-        catch (HttpRequestException ex)
+
+        if (id > 0)
         {
-            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                return RedirectToAction("Salir", "Auth");
-            }
-            if (ex.StatusCode == System.Net.HttpStatusCode.Conflict)
-            {
-                return RedirectToAction("Detalle", new { id = id });
-            }
+            TempData["ErrorCantidad"] = "No se ha podido procesar la operación, el rango máximo de compra por producto es 10";
+            return RedirectToAction("Detalle", new { id });
         }
-        return RedirectToAction("Error", "Home");
+        else
+        {
+            return RedirectToAction("Error", "Home");
+        }
     }
 
 }
