@@ -50,7 +50,7 @@ public class ComprarController(ProductosClientService productos, IConfiguration 
             {
                 return RedirectToAction("Salir", "Auth");
             }
-            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            if (item == null && ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 return RedirectToAction("NotFoundPage", "Home");
             }
