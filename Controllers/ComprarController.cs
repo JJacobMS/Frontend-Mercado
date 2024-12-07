@@ -78,6 +78,10 @@ public class ComprarController(ProductosClientService productos, IConfiguration 
             {
                 return RedirectToAction("Salir", "Auth");
             }
+            if (ex.StatusCode == System.Net.HttpStatusCode.Conflict)
+            {
+                return RedirectToAction("Detalle", new { id = id });
+            }
         }
         return RedirectToAction("Error", "Home");
     }
