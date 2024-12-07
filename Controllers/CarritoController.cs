@@ -59,7 +59,8 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
             {
                 return RedirectToAction("NotFoundPage", "Home");
             }
-            else{
+            else
+            {
                 itemCarrito = itemToDelete[0];
             }
             if (showError.GetValueOrDefault())
@@ -107,11 +108,12 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
         ViewBag.Url = configuration["UrlWebAPI"];
         try
         {
-            
-            if(cantidad > cantidadDisponible){
+
+            if (cantidad > cantidadDisponible)
+            {
                 TempData["ErrorCantidad"] = "No hay suficientes productos disponibles para la compra.";
-                TempData["IdError"] = id;       
-                return Json(new { success = false, redirectUrl = Url.Action("Index")});
+                TempData["IdError"] = id;
+                return Json(new { success = false, redirectUrl = Url.Action("Index") });
             }
             await carritos.PutAsync(id, cantidad);
             return Json(new { success = true });
@@ -126,4 +128,29 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
         return BadRequest();
     }
 
+    public IActionResult Comprar()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RealizarCompra()
+    {
+        try
+        {
+            await carritos.PostAsyncCompra();
+        }
+        catch (HttpRequestException ex)
+        {
+            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                return RedirectToAction("Salir", "Auth");
+            }
+            return View("ResultadoErrorCompra");
+        }
+        return View("ResultadoCompra");
+    }
+
 }
+
+

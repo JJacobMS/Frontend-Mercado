@@ -14,7 +14,7 @@ public class AuthController(AuthClientService auth) : Controller
     public IActionResult Index()
     {
         return View();
-    }   
+    }
 
     [HttpPost]
     [AllowAnonymous]
@@ -35,7 +35,7 @@ public class AuthController(AuthClientService auth) : Controller
                 };
                 auth.IniciaSesionAsync(claims);
 
-                if (token.Rol == "Administrador") 
+                if (token.Rol == "Administrador")
                 {
                     return RedirectToAction("Index", "Home");
                 }
@@ -44,7 +44,11 @@ public class AuthController(AuthClientService auth) : Controller
                     return RedirectToAction("Index", "Home");
                 }
             }
-            catch (Exception)
+            catch (HttpRequestException ex)
+            {
+                ModelState.AddModelError("Email", "No se pudo conectar al servidor. Intente nuevamente.");
+            }
+            catch (InvalidOperationException ex)
             {
                 ModelState.AddModelError("Email", "Credenciales no válidas. Inténtelo nuevamente.");
             }
@@ -58,5 +62,5 @@ public class AuthController(AuthClientService auth) : Controller
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Index", "Auth");
     }
-    
+
 }

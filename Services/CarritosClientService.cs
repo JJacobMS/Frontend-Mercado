@@ -23,5 +23,11 @@ public class CarritosClientService(HttpClient client)
         var response = await client.PutAsJsonAsync($"api/carritos/{idProducto}", data);
         response.EnsureSuccessStatusCode();
     }
+    public async Task PostAsyncCompra()
+    {
+        var data = new {};
+        var response = await client.PostAsJsonAsync($"api/compras/", data);
+        response.EnsureSuccessStatusCode();
+    }
     
 }
