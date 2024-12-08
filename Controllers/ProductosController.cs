@@ -40,13 +40,17 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
         try
         {
             item = await productos.GetAsync(id);
-            if (item == null) return NotFound();
+            if (item == null) return RedirectToAction("NotFoundPage", "Home");
         }
         catch (HttpRequestException ex)
         {
             if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("Salir", "Auth");
+            }
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
             }
         }
         return View(item);
@@ -90,7 +94,7 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
             itemToEdit = await productos.GetAsync(id);
             if (itemToEdit == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundPage", "Home");
             }
         }
         catch (HttpRequestException ex)
@@ -98,6 +102,10 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
             if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("Salir", "Auth");
+            }
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
             }
         }
         await ProductosDropDownListAsync();
@@ -137,7 +145,7 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
             itemToDelete = await productos.GetAsync(id);
             if (itemToDelete == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundPage", "Home");
             }
             if (showError.GetValueOrDefault())
             {
@@ -149,6 +157,10 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
             if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("Salir", "Auth");
+            }
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
             }
         }
         ViewBag.Url = configuration["UrlWebAPI"];
@@ -195,7 +207,7 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
             itemToView = await productos.GetAsync(id);
             if (itemToView == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundPage", "Home");
             }
         }
         catch (HttpRequestException ex)
@@ -204,8 +216,12 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
             {
                 return RedirectToAction("Salir", "Auth");
             }
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
+            }
         }
-        ViewBag.Url = configuration["UrlWebAPI"];        
+        ViewBag.Url = configuration["UrlWebAPI"];
         ViewData["ProductoId"] = itemToView?.ProductoId;
         return View(itemToView);
     }
@@ -218,7 +234,7 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
             Producto? producto = await productos.GetAsync(id);
             if (producto == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundPage", "Home");
             }
             await CategoriasDropDownListAsync();
             itemToView = new ProductoCategoria { Producto = producto };
@@ -228,6 +244,10 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
             if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("Salir", "Auth");
+            }
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
             }
         }
         ViewBag.Url = configuration["UrlWebAPI"];
@@ -245,13 +265,13 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
                 producto = await productos.GetAsync(id);
                 if (producto == null)
                 {
-                    return NotFound();
+                    return RedirectToAction("NotFoundPage", "Home");
                 }
 
                 Categoria? categoria = await categorias.GetAsync(categoriaid);
                 if (categoria == null)
                 {
-                    return NotFound();
+                    return RedirectToAction("NotFoundPage", "Home");
                 }
 
                 await productos.PostAsync(id, categoriaid);
@@ -279,13 +299,13 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
             Producto? producto = await productos.GetAsync(id);
             if (producto == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundPage", "Home");
             }
 
             Categoria? categoria = await categorias.GetAsync(categoriaid);
             if (categoria == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundPage", "Home");
             }
 
             itemToView = new ProductoCategoria { Producto = producto, CategoriaId = categoriaid, Nombre = categoria.Nombre };
@@ -300,6 +320,10 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
             if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("Salir", "Auth");
+            }
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
             }
         }
         ViewBag.Url = configuration["UrlWebAPI"];

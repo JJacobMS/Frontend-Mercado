@@ -17,7 +17,7 @@ namespace frontendnet
             }
             catch (HttpRequestException ex)
             {
-                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized) 
+                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Salir", "Auth");
                 }
@@ -30,12 +30,20 @@ namespace frontendnet
             try
             {
                 item = await compras.GetAsync(id);
+                if (item == null)
+                {
+                    return RedirectToAction("NotFoundPage", "Home");
+                }
             }
             catch (HttpRequestException ex)
             {
-                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized) 
+                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Salir", "Auth");
+                }
+                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return RedirectToAction("NotFoundPage", "Home");
                 }
             }
             return View(item);

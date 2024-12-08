@@ -11,12 +11,7 @@ namespace frontendnet;
 public class CarritoController(CarritosClientService carritos, IConfiguration configuration) : Controller
 {
 
-    public IActionResult Index()
-    {
-        return View();
-    }
-
-    public async Task<IActionResult> CarritoComprasPartial()
+    public async Task<IActionResult> Index()
     {
         List<Carrito>? lista = [];
         List<CarritoProducto> listaproductos = [];
@@ -32,7 +27,6 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
                 return RedirectToAction("Salir", "Auth");
             }
         }
-
         if (lista != null && lista.Count > 0)
         {
             foreach (var item in lista)
@@ -43,19 +37,20 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
                 }
             }
         }
-        return PartialView("_PartialCardCarrito", listaproductos);
+        return View(listaproductos);
     }
 
     public async Task<IActionResult> Eliminar(int itemid, bool? showError = false)
     {
         List<CarritoProducto>? itemToDelete = null;
         CarritoProducto? itemCarrito = null;
+        ViewBag.Url = configuration["UrlWebAPI"];
         try
         {
             itemToDelete = await carritos.GetProductoCarritoAsync(itemid);
             if (itemToDelete == null || itemToDelete.Count == 0 || itemToDelete.Count > 1)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundPage", "Home");
             }
             else
             {
@@ -72,6 +67,10 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
             {
                 return RedirectToAction("Salir", "Auth");
             }
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
+            }
         }
         return View(itemCarrito);
     }
@@ -80,6 +79,7 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
     [HttpPost]
     public async Task<IActionResult> ProductoCarrito(int id)
     {
+        ViewBag.Url = configuration["UrlWebAPI"];
         try
         {
             await carritos.DeleteAsync(id);
@@ -95,29 +95,33 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
         return RedirectToAction(nameof(Eliminar), new { itemid = id, showerror = true });
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Producto(int id, int cantidad, int cantidadDisponible)
+    [HttpPost]
+    public async Task<IActionResult> ProductoAgregarAsync(int id, int? cantidadDisponible, int cantidad)
     {
-        try
+        ViewBag.Url = configuration["UrlWebAPI"];
+        if (ModelState.IsValid)
         {
-
-            if (cantidad > cantidadDisponible)
+            try
             {
-                TempData["ErrorCantidad"] = "No hay suficientes productos disponibles para la compra.";
-                TempData["IdError"] = id;
-                return Json(new { success = false, redirectUrl = Url.Action("Index") });
+                if (cantidad > cantidadDisponible)
+                {
+                    TempData["ErrorCantidad"] = "No hay suficientes productos disponibles para la compra.";
+                    TempData["IdError"] = id;
+                    return RedirectToAction("Index");
+                }
+                await carritos.PutAsync(id, cantidad);
+                return RedirectToAction("Index");
             }
-            await carritos.PutAsync(id, cantidad);
-            return Json(new { success = true });
-        }
-        catch (HttpRequestException ex)
-        {
-            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            catch (HttpRequestException ex)
             {
-                return Json(new { success = false, redirectUrl = Url.Action("Salir", "Auth") });
+                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Salir", "Auth");
+                }
             }
         }
-        return BadRequest();
+        TempData["ErrorExterno"] = "Hubo un error, por favor inténtelo más tarde";
+        return RedirectToAction("Index");
     }
 
     public IActionResult Comprar()
