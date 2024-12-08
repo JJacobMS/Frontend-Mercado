@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Diagnostics;
 
 namespace frontendnet;
 
@@ -46,10 +47,12 @@ public class AuthController(AuthClientService auth) : Controller
             }
             catch (HttpRequestException ex)
             {
+                Debug.WriteLine(ex);
                 ModelState.AddModelError("Email", "No se pudo conectar al servidor. Intente nuevamente.");
             }
             catch (InvalidOperationException ex)
             {
+                Debug.WriteLine(ex);
                 ModelState.AddModelError("Email", "Credenciales no válidas. Inténtelo nuevamente.");
             }
         }
