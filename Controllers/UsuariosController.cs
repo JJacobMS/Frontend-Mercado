@@ -180,18 +180,33 @@ public class UsuariosController(UsuariosClientService usuarios) : Controller
     [HttpPost]
     public async Task<IActionResult> Eliminar(string id)
     {
+        TempData.Remove("Message");
+        TempData.Remove("ErrorMessage");
         if (ModelState.IsValid)
         {
             try
             {
-                await usuarios.DeleteAsync(id);
+                var response = await usuarios.DeleteAsync(id);
                 return RedirectToAction(nameof(Index));
             }
             catch (HttpRequestException ex)
             {
+
                 if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Salir", "Auth");
+                }
+                else if (ex.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    TempData["ErrorMessage"] = "No se puede eliminar un usuario protegido.";
+                }
+                else if (ex.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    TempData["ErrorMessage"] = "No se puede eliminar un usuario con compras.";
+                }
+                else if (ex.StatusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    TempData["Message"] = "Usuario eliminado correctamente.";
                 }
             }
         }

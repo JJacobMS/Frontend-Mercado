@@ -18,7 +18,12 @@
 @if (ViewBag.PuedeEditar)
 {
     <p class="text-danger">¿Está seguro que desea eliminar este elemento?</p>
-
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }
     <partial name="_DetallePartial" />
 
     <form asp-action="Eliminar">
