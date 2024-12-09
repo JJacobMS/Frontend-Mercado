@@ -8,7 +8,7 @@ public class RefrescaTokenDelegatingHandler(AuthClientService auth, IHttpContext
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var response = await base.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode(); //Verificar si no es
+        response.EnsureSuccessStatusCode(); 
         if(response.Headers.Contains("Set-Authorization"))
         {
             string jwt = response.Headers.GetValues("Set-Authorization").FirstOrDefault()!;

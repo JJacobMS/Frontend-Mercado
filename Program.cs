@@ -52,6 +52,10 @@ builder.Services.AddHttpClient<ComprasClientService>(httpClient => { httpClient.
 .AddHttpMessageHandler<EnviarBearerDelegatingHandler>()
 .AddHttpMessageHandler<RefrescaTokenDelegatingHandler>();
 
+builder.Services.AddHttpClient<MisComprasClientService>(httpClient => { httpClient.BaseAddress = new Uri(UrlWebAPI!); })
+.AddHttpMessageHandler<EnviarBearerDelegatingHandler>()
+.AddHttpMessageHandler<RefrescaTokenDelegatingHandler>();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {

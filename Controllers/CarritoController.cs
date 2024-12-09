@@ -135,6 +135,7 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
         try
         {
             await carritos.PostAsyncCompra();
+            return View("ResultadoCompra");
         }
         catch (HttpRequestException ex)
         {
@@ -142,9 +143,22 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
             {
                 return RedirectToAction("Salir", "Auth");
             }
-            return View("ResultadoErrorCompra");
+            else if (ex.StatusCode == System.Net.HttpStatusCode.Conflict)
+            {
+                ViewData["ErrorMessage"] = "Sin stock suficiente para comprar el producto.";
+                return View("ResultadoErrorCompra");
+            }
+            else if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                ViewData["ErrorMessage"] = "El carrito está vacío.";
+                return View("ResultadoErrorCompra");
+            }
+            else
+            {
+                ViewData["ErrorMessage"] = "Ocurrió un error inesperado, por favor intenta nuevamente.";
+                return View("ResultadoErrorCompra");
+            }
         }
-        return View("ResultadoCompra");
     }
 
 }

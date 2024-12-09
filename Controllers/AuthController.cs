@@ -66,4 +66,8 @@ public class AuthController(AuthClientService auth) : Controller
         return RedirectToAction("Index", "Auth");
     }
 
+    public IActionResult CrearCuenta()
+    {
+        return RedirectToAction("CrearUsuario", "Usuarios");
+    }
 }
