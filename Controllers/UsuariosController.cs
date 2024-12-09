@@ -120,10 +120,8 @@ public class UsuariosController(UsuariosClientService usuarios) : Controller
     [HttpPost("[controller]/[action]/{email?}")]
     public async Task<IActionResult> EditarAsync(string email, Usuario itemToEdit)
     {
-        Console.WriteLine("EditarAsync");
         if (ModelState.IsValid)
         {
-            Console.WriteLine("IsValid");
             try
             {
                 var response = await usuarios.PutAsync(itemToEdit);
