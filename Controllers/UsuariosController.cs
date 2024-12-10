@@ -7,8 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace frontendnet;
 
-[Authorize(Roles = "Administrador")]
-public class UsuariosController(UsuariosClientService usuarios, RolesClientService roles) : Controller
+public class UsuariosController(UsuariosClientService usuarios) : Controller
 {
     public async Task<IActionResult> Index()
     {
@@ -19,7 +18,7 @@ public class UsuariosController(UsuariosClientService usuarios, RolesClientServi
         }
         catch (HttpRequestException ex)
         {
-            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized) 
+            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("Salir", "Auth");
             }
@@ -33,14 +32,14 @@ public class UsuariosController(UsuariosClientService usuarios, RolesClientServi
         try
         {
             item = await usuarios.GetAsync(id);
-            if (item == null) 
+            if (item == null)
             {
                 return NotFound();
-            } 
+            }
         }
         catch (HttpRequestException ex)
         {
-            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized) 
+            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("Salir", "Auth");
             }
@@ -48,32 +47,50 @@ public class UsuariosController(UsuariosClientService usuarios, RolesClientServi
         return View(item);
     }
 
-    public async Task<IActionResult> Crear()
+    public IActionResult Crear()
     {
-        await RolesDropDownListAsync();
+        ViewData["PreTitle"] = "Listado";
         return View();
+    }
+
+    public IActionResult CrearUsuario()
+    {
+        ViewData["PreTitle"] = "Inicio Sesion";
+        return View("Crear");
     }
 
     [HttpPost]
     public async Task<IActionResult> CrearAsync(UsuarioPwd itemToCreate)
     {
+
         if (ModelState.IsValid)
         {
             try
             {
-                await usuarios.PostAsync(itemToCreate);
+                var response = await usuarios.PostAsync(itemToCreate);
                 return RedirectToAction(nameof(Index));
             }
             catch (HttpRequestException ex)
             {
-                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized) 
+                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    return RedirectToAction("Salir", "Auth");         
+                    return RedirectToAction("Salir", "Auth");
                 }
+                else if (ex.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    ModelState.AddModelError("Email", "El correo electrónico ya está registrado.");
+                    return View(itemToCreate);
+                }
+                else if (ex.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
+                {
+                    ModelState.AddModelError("Email", "Correo o contraseña inválidos.");
+                    ModelState.AddModelError("Password", "Correo o contraseña inválidos.");
+                    return View(itemToCreate);
+                }
+                ModelState.AddModelError("Email", "Error inesperado al procesar la solicitud.");
             }
         }
         ModelState.AddModelError("Email", "No ha sido posible realizar la acción. Inténtelo nuevamente.");
-        await RolesDropDownListAsync();
         return View(itemToCreate);
     }
 
@@ -84,46 +101,52 @@ public class UsuariosController(UsuariosClientService usuarios, RolesClientServi
         try
         {
             itemToEdit = await usuarios.GetAsync(email);
-            if (itemToEdit == null) 
+            if (itemToEdit == null)
             {
                 return NotFound();
-            } 
+            }
         }
         catch (HttpRequestException ex)
         {
-            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized) 
+            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("Salir", "Auth");
             }
         }
         ViewBag.PuedeEditar = (User.Identity?.Name == email);
-        await RolesDropDownListAsync(itemToEdit?.Rol);
         return View(itemToEdit);
     }
 
     [HttpPost("[controller]/[action]/{email?}")]
     public async Task<IActionResult> EditarAsync(string email, Usuario itemToEdit)
     {
-        if (email != itemToEdit.Email) return NotFound();
-
         if (ModelState.IsValid)
         {
             try
             {
-                await usuarios.PutAsync(itemToEdit);
+                var response = await usuarios.PutAsync(itemToEdit);
                 return RedirectToAction(nameof(Index));
             }
             catch (HttpRequestException ex)
             {
-                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized) 
+                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Salir", "Auth");
                 }
+                else if (ex.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
+                {
+                    ModelState.AddModelError("Nombre", "Correo invalido.");
+                    return View(itemToEdit);
+                }
+                else if (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    ModelState.AddModelError("Nombre", "El nombre del usuario es obligatorio y debe ser una cadena con al menos un carácter.");
+                    return View(itemToEdit);
+                }
+                ModelState.AddModelError("Nombre", "Error inesperado al procesar la solicitud.");
             }
         }
         ModelState.AddModelError("Nombre", "No ha sido posible realizar la acción. Inténtelo nuevamente.");
-        ViewBag.PuedeEditar = (User.Identity?.Name == email);
-        await RolesDropDownListAsync(itemToEdit.Rol);
         return View(itemToEdit);
     }
 
@@ -133,19 +156,19 @@ public class UsuariosController(UsuariosClientService usuarios, RolesClientServi
         try
         {
             itemToDelete = await usuarios.GetAsync(id);
-            if (itemToDelete == null) 
+            if (itemToDelete == null)
             {
                 return NotFound();
-            } 
+            }
 
-            if (showError.GetValueOrDefault()) 
+            if (showError.GetValueOrDefault())
             {
                 ViewData["ErrorMessage"] = "No ha sido posible realizar la acción. Inténtelo nuevamente.";
             }
         }
         catch (HttpRequestException ex)
         {
-            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized) 
+            if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 return RedirectToAction("Salir", "Auth");
             }
@@ -157,28 +180,36 @@ public class UsuariosController(UsuariosClientService usuarios, RolesClientServi
     [HttpPost]
     public async Task<IActionResult> Eliminar(string id)
     {
+        TempData.Remove("Message");
+        TempData.Remove("ErrorMessage");
         if (ModelState.IsValid)
         {
             try
             {
-                await usuarios.DeleteAsync(id);
+                var response = await usuarios.DeleteAsync(id);
                 return RedirectToAction(nameof(Index));
             }
             catch (HttpRequestException ex)
             {
-                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized) 
+
+                if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Salir", "Auth");
+                }
+                else if (ex.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    TempData["ErrorMessage"] = "No se puede eliminar un usuario protegido.";
+                }
+                else if (ex.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    TempData["ErrorMessage"] = "No se puede eliminar un usuario con compras.";
+                }
+                else if (ex.StatusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    TempData["Message"] = "Usuario eliminado correctamente.";
                 }
             }
         }
         return RedirectToAction(nameof(Eliminar), new { id, showError = true });
     }
-
-    private async Task RolesDropDownListAsync(object? rolSeleccionado = null)
-    {
-        var listado = await roles.GetAsync();
-        ViewBag.Rol = new SelectList(listado, "Nombre", "Nombre", rolSeleccionado);
-    }
-
 }

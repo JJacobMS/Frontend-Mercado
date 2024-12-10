@@ -11,19 +11,20 @@ public class UsuariosClientService(HttpClient client)
     {
         return await client.GetFromJsonAsync<Usuario>($"api/usuarios/{email}");
     }
-    public async Task PostAsync(UsuarioPwd usuario)
+    public async Task<HttpResponseMessage> PostAsync(UsuarioPwd usuario)
     {
         var response = await client.PostAsJsonAsync("api/usuarios", usuario);
-        response.EnsureSuccessStatusCode();
+        return response;
     }
-    public async Task PutAsync(Usuario usuario)
+    public async Task<HttpResponseMessage> PutAsync(Usuario usuario)
     {
         var response = await client.PutAsJsonAsync($"api/usuarios/{usuario.Email}", usuario);
-        response.EnsureSuccessStatusCode();
+        return response;
     }
-    public async Task DeleteAsync(string email)
+    public async Task<HttpResponseMessage> DeleteAsync(string email)
     {
+                Console.WriteLine("ELIMINANDO7");
         var response = await client.DeleteAsync($"api/usuarios/{email}");
-        response.EnsureSuccessStatusCode();
+        return response;
     }
 }

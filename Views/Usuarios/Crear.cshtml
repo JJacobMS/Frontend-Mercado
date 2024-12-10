@@ -10,7 +10,8 @@
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb small">
-        <li class="breadcrumb-item"><a class="text-decoration-none" title="Regresar al listado" asp-action="Index">Listado</a></li>
+        <li class="breadcrumb-item"><a class="text-decoration-none" title="Regresar al listado"
+                asp-action="Index">@ViewData["PreTitle"]</a></li>
         <li class="breadcrumb-item active" aria-current="page">@ViewData["SubTitle"]</li>
     </ol>
 </nav>
@@ -31,20 +32,16 @@
                 <input asp-for="Password" class="form-control" placeholder="Password" />
                 <label asp-for="Password" class="form-label"></label>
                 <span asp-validation-for="Password" class="text-danger"></span>
+                <small class="form-text text-muted">
+                    La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, un número y un
+                    carácter especial.
+                </small>
             </div>
 
             <div class="form-floating mb-3">
                 <input asp-for="Nombre" placeholder="Nombre" class="form-control" />
                 <label asp-for="Nombre" class="form-label"></label>
                 <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-
-            <div class="form-floating mb-3">
-                <select class="form-select" asp-for="Rol" class="form-control" asp-items="ViewBag.Rol">
-                    <option value="">Seleccione un rol de usuario</option>
-                </select>
-                <label asp-for="Rol" class="control-label"></label>
-                <span asp-validation-for="Rol" class="text-danger"></span>
             </div>
         </div>
     </div>
