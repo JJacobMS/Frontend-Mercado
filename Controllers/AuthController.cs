@@ -47,13 +47,19 @@ public class AuthController(AuthClientService auth) : Controller
             }
             catch (HttpRequestException ex)
             {
-                Debug.WriteLine(ex);
-                ModelState.AddModelError("Email", "No se pudo conectar al servidor. Intente nuevamente.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                Debug.WriteLine(ex);
-                ModelState.AddModelError("Email", "Credenciales no válidas. Inténtelo nuevamente.");
+
+                if (ex.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
+                {
+                    ModelState.AddModelError("Email", "Credenciales no válidas. Inténtelo nuevamente.");
+                }
+                else if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    ModelState.AddModelError("Email", "No se ha encontrado un usuario con dicho correo.");
+                }
+                else
+                {
+                    ModelState.AddModelError("Email", "No se pudo conectar al servidor. Intente nuevamente.");
+                }
             }
         }
         return View(model);
