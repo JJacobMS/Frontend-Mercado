@@ -68,6 +68,7 @@ public class UsuariosController(UsuariosClientService usuarios) : Controller
             try
             {
                 var response = await usuarios.PostAsync(itemToCreate);
+                TempData["SuccessMessage"] = "Cuenta Creada Exitosamente";
                 return RedirectToAction(nameof(Index));
             }
             catch (HttpRequestException ex)
@@ -125,6 +126,7 @@ public class UsuariosController(UsuariosClientService usuarios) : Controller
             try
             {
                 var response = await usuarios.PutAsync(itemToEdit);
+                TempData["SuccessMessage"] = "Usuario modificado exitosamente";
                 return RedirectToAction(nameof(Index));
             }
             catch (HttpRequestException ex)
@@ -187,6 +189,7 @@ public class UsuariosController(UsuariosClientService usuarios) : Controller
             try
             {
                 var response = await usuarios.DeleteAsync(id);
+                TempData["SuccessMessage"] = "Se ha eliminado el usuario correctamente";
                 return RedirectToAction(nameof(Index));
             }
             catch (HttpRequestException ex)
@@ -198,7 +201,7 @@ public class UsuariosController(UsuariosClientService usuarios) : Controller
                 }
                 else if (ex.StatusCode == System.Net.HttpStatusCode.Forbidden)
                 {
-                    TempData["ErrorMessage"] = "No se puede eliminar un usuario protegido.";
+                    TempData["ErrorMessage"] = "No se puede eliminar un usuario protegido";
                 }
                 else if (ex.StatusCode == System.Net.HttpStatusCode.Conflict)
                 {

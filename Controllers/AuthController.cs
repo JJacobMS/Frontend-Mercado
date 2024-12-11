@@ -35,7 +35,6 @@ public class AuthController(AuthClientService auth) : Controller
                     new(ClaimTypes.Role, token.Rol),
                 };
                 auth.IniciaSesionAsync(claims);
-
                 if (token.Rol == "Administrador")
                 {
                     return RedirectToAction("Index", "Home");
@@ -47,13 +46,18 @@ public class AuthController(AuthClientService auth) : Controller
             }
             catch (HttpRequestException ex)
             {
-                Debug.WriteLine(ex);
-                ModelState.AddModelError("Email", "No se pudo conectar al servidor. Intente nuevamente.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                Debug.WriteLine(ex);
-                ModelState.AddModelError("Email", "Credenciales no válidas. Inténtelo nuevamente.");
+                if (ex.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
+                {
+                    ModelState.AddModelError("Password", "Contraseña invalida. Inténtelo nuevamente.");
+                }
+                else if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    ModelState.AddModelError("Email", "Correo no registrado.");
+                }
+                else 
+                {
+                    ModelState.AddModelError("Email", "Ha ocurrido un error inesperado.");
+                }
             }
         }
         return View(model);

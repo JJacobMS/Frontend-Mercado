@@ -15,9 +15,8 @@ public class UsuarioPwd
     [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?""{}|<>]).{8,}$",
         ErrorMessage = "La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, un número y un carácter especial.")]
     public required string Password { get; set; }
+    [RegularExpression(@"^(?!\s*$).+", ErrorMessage = "El campo {0} no puede contener solo espacios.")]
 
     [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-    [RegularExpression(@"\S+", ErrorMessage = "El campo {0} no puede contener solo espacios.")]
-
     public required string Nombre { get; set; }
 }

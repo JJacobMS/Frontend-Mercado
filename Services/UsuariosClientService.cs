@@ -23,8 +23,8 @@ public class UsuariosClientService(HttpClient client)
     }
     public async Task<HttpResponseMessage> DeleteAsync(string email)
     {
-                Console.WriteLine("ELIMINANDO7");
         var response = await client.DeleteAsync($"api/usuarios/{email}");
+        response.EnsureSuccessStatusCode();
         return response;
     }
 }
