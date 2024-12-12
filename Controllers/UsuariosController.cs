@@ -88,7 +88,16 @@ public class UsuariosController(UsuariosClientService usuarios) : Controller
                     ModelState.AddModelError("Password", "Correo o contraseña inválidos.");
                     return View(itemToCreate);
                 }
-                ModelState.AddModelError("Email", "Error inesperado al procesar la solicitud.");
+                else if (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    ModelState.AddModelError("Email", "Ha ocurrido un error inesperado con la solicitud.");
+                    return View(itemToCreate);
+                }
+                else
+                {
+                    ModelState.AddModelError("Email", "Ha ocurrido un error inesperado en el servidor.");
+                    return View(itemToCreate);
+                }
             }
         }
         ModelState.AddModelError("Email", "No ha sido posible realizar la acción. Inténtelo nuevamente.");
@@ -102,10 +111,8 @@ public class UsuariosController(UsuariosClientService usuarios) : Controller
         try
         {
             itemToEdit = await usuarios.GetAsync(email);
-            if (itemToEdit == null)
-            {
-                return NotFound();
-            }
+            ViewBag.PuedeEditar = (User.Identity?.Name == email);
+            return View(itemToEdit);
         }
         catch (HttpRequestException ex)
         {
@@ -113,9 +120,17 @@ public class UsuariosController(UsuariosClientService usuarios) : Controller
             {
                 return RedirectToAction("Salir", "Auth");
             }
+            else if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                TempData["ErrorMessage"] = "No se ha encontrado un usuario asociado.";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Ha ocurrido un error inesperado en el servidor.";
+                return RedirectToAction("Index");
+            }
         }
-        ViewBag.PuedeEditar = (User.Identity?.Name == email);
-        return View(itemToEdit);
     }
 
     [HttpPost("[controller]/[action]/{email?}")]
@@ -137,18 +152,27 @@ public class UsuariosController(UsuariosClientService usuarios) : Controller
                 }
                 else if (ex.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
                 {
-                    ModelState.AddModelError("Nombre", "Correo invalido.");
+                    TempData["ErrorMessage"] = "Correo invalido.";
+                    return View(itemToEdit);
+                }
+                else if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    TempData["ErrorMessage"] = "No se ha encontrado un usuario asociado.";
                     return View(itemToEdit);
                 }
                 else if (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
-                    ModelState.AddModelError("Nombre", "El nombre del usuario es obligatorio y debe ser una cadena con al menos un carácter.");
+                    TempData["ErrorMessage"] = "El nombre del usuario es obligatorio y debe ser una cadena con al menos un carácter.";
                     return View(itemToEdit);
                 }
-                ModelState.AddModelError("Nombre", "Error inesperado al procesar la solicitud.");
+                else
+                {
+                    TempData["ErrorMessage"] = "Ha ocurrido un error inesperado en el servidor.";
+                    return View(itemToEdit);
+                }
             }
         }
-        ModelState.AddModelError("Nombre", "No ha sido posible realizar la acción. Inténtelo nuevamente.");
+        TempData["ErrorMessage"] = "No ha sido posible realizar la acción. Inténtelo nuevamente.";
         return View(itemToEdit);
     }
 

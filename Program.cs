@@ -2,6 +2,11 @@ using frontendnet.Middlewares;
 using frontendnet.Models;
 using frontendnet.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Globalization;
+
+var cultureInfo = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 var builder = WebApplication.CreateBuilder(args);
 

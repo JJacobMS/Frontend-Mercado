@@ -155,7 +155,7 @@ public class CarritoController(CarritosClientService carritos, IConfiguration co
             }
             else
             {
-                ViewData["ErrorMessage"] = "Ocurrió un error inesperado, por favor intenta nuevamente.";
+                ViewData["ErrorMessage"] = "Ha ocurrido un error inesperado en el servidor.";
                 return View("ResultadoErrorCompra");
             }
         }

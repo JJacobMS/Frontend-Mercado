@@ -41,10 +41,7 @@ namespace frontendnet
                 {
                     return RedirectToAction("Salir", "Auth");
                 }
-                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    return RedirectToAction("NotFoundPage", "Home");
-                }
+                return RedirectToAction("Error", "Home");
             }
             return View(item);
         }

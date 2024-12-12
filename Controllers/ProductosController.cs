@@ -78,10 +78,13 @@ public class ProductosController(ProductosClientService productos, CategoriasCli
                 {
                     return RedirectToAction("Salir", "Auth");
                 }
+                await ProductosDropDownListAsync();
+                ModelState.AddModelError("Titulo", "No ha sido posible realizar la acción. Inténtelo nuevamente.");
+                return View(itemToCreate);
             }
         }
+        Console.WriteLine(ModelState.IsValid);
         await ProductosDropDownListAsync();
-        ModelState.AddModelError("Titulo", "No ha sido posible realizar la acción. Inténtelo nuevamente.");
         return View(itemToCreate);
     }
 

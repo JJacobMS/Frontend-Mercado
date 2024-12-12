@@ -54,9 +54,13 @@ public class AuthController(AuthClientService auth) : Controller
                 {
                     ModelState.AddModelError("Email", "Correo no registrado.");
                 }
+                else if (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    ModelState.AddModelError("Email", "Ha ocurrido un error inesperado con la solicitud.");
+                }
                 else 
                 {
-                    ModelState.AddModelError("Email", "Ha ocurrido un error inesperado.");
+                    ModelState.AddModelError("Email", "Ha ocurrido un error inesperado en el servidor.");
                 }
             }
         }
