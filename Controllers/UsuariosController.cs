@@ -84,8 +84,9 @@ public class UsuariosController(UsuariosClientService usuarios) : Controller
                 }
                 else if (ex.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
                 {
-                    ModelState.AddModelError("Email", "Correo o contraseña inválidos.");
-                    ModelState.AddModelError("Password", "Correo o contraseña inválidos.");
+                    ModelState.AddModelError("Email", "Correo, contraseña o nombre invalido.");
+                    ModelState.AddModelError("Password", "Correo, contraseña o nombre invalido.");
+                    ModelState.AddModelError("Nombre", "Correo, contraseña o nombre invalido.");
                     return View(itemToCreate);
                 }
                 else if (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
